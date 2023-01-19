@@ -2,6 +2,8 @@ package com.kaua.first.controllers;
 
 import com.kaua.first.AppError;
 import com.kaua.first.entities.PersonEntity;
+import com.kaua.first.exceptions.PasswordInvalidException;
+import com.kaua.first.exceptions.UserNotFoundException;
 import com.kaua.first.models.Person;
 import com.kaua.first.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ public class FirstController {
         if (person.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new AppError(
-                            new Exception("User not found").getMessage()
+                            new UserNotFoundException().getMessage()
                     ));
         }
 
@@ -44,7 +46,7 @@ public class FirstController {
         if (person.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new AppError(
-                            new Exception("User not found").getMessage()
+                            new UserNotFoundException().getMessage()
                     ));
         }
 
@@ -56,7 +58,7 @@ public class FirstController {
         if (!person.passwordIsValid()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new AppError(
-                            new Exception("Password must contain 8 characters at least").getMessage()
+                            new PasswordInvalidException().getMessage()
                     ));
         }
 
@@ -78,7 +80,7 @@ public class FirstController {
         if (person.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new AppError(
-                            new Exception("User not found").getMessage()
+                            new UserNotFoundException().getMessage()
                     ));
         }
 
