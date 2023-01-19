@@ -20,11 +20,7 @@ public class PersonService {
     }
 
     public Optional<PersonEntity> findById(Long id) {
-        Optional<PersonEntity> person = personRepository.findById(id);
-        if (person.isEmpty()) {
-            return null;
-        }
-        return person;
+        return personRepository.findById(id);
     }
 
     public PersonEntity save(PersonEntity personEntity) {

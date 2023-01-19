@@ -1,5 +1,6 @@
 package com.kaua.first.controllers;
 
+import com.kaua.first.AppError;
 import com.kaua.first.entities.PersonEntity;
 import com.kaua.first.models.Person;
 import com.kaua.first.services.PersonService;
@@ -26,9 +27,11 @@ public class FirstController {
     public ResponseEntity<Object> getById(@PathVariable Long id) {
         Optional<PersonEntity> person = personService.findById(id);
 
-        if (person == null) {
+        if (person.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new Exception("User not found").getMessage());
+                    .body(new AppError(
+                            new Exception("User not found").getMessage()
+                    ));
         }
 
         return ResponseEntity.ok(person);
@@ -38,7 +41,9 @@ public class FirstController {
     public ResponseEntity<Object> create(@RequestBody Person person) {
         if (!person.passwordIsValid()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new Exception("Password must contain 8 characters at least").getMessage());
+                    .body(new AppError(
+                            new Exception("Password must contain 8 characters at least").getMessage()
+                    ));
         }
 
         PersonEntity personEntity = PersonEntity.builder()
@@ -56,9 +61,11 @@ public class FirstController {
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         Optional<PersonEntity> person = personService.findById(id);
 
-        if (person == null) {
+        if (person.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new Exception("User not found").getMessage());
+                    .body(new AppError(
+                            new Exception("User not found").getMessage()
+                    ));
         }
 
         personService.delete(id);
