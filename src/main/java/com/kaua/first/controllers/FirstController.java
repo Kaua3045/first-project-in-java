@@ -23,9 +23,23 @@ public class FirstController {
         return personService.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Object> getById(@PathVariable Long id) {
         Optional<PersonEntity> person = personService.findById(id);
+
+        if (person.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new AppError(
+                            new Exception("User not found").getMessage()
+                    ));
+        }
+
+        return ResponseEntity.ok(person);
+    }
+
+    @GetMapping("/{name}")
+    public ResponseEntity<Object> getByName(@PathVariable String name) {
+        Optional<PersonEntity> person = personService.findByName(name);
 
         if (person.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
