@@ -1,11 +1,15 @@
 package com.kaua.first.controllers;
 
+import com.kaua.first.AppError;
 import com.kaua.first.entities.CourseEntity;
 import com.kaua.first.entities.PersonEntity;
+import com.kaua.first.exceptions.CourseNotFoundException;
+import com.kaua.first.exceptions.UserNotFoundException;
 import com.kaua.first.models.Course;
 import com.kaua.first.services.CourseService;
 import com.kaua.first.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,13 +51,19 @@ public class CourseController {
         Optional<CourseEntity> courseEntity = _courseService.findById(courseId);
 
         if (courseEntity.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new AppError(
+                            new CourseNotFoundException().getMessage()
+                    ));
         }
 
         Optional<PersonEntity> personEntity = _personService.findById(personId);
 
         if (personEntity.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new AppError(
+                            new UserNotFoundException().getMessage()
+                    ));
         }
 
         personEntity.get().addCourse(courseEntity.get());
