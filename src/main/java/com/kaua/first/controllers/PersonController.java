@@ -19,16 +19,16 @@ import java.util.Optional;
 public class PersonController {
 
     @Autowired
-    private PersonService personService;
+    private PersonService _personService;
 
     @GetMapping("/")
     public List<PersonEntity> listAll() {
-        return personService.findAll();
+        return _personService.findAll();
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<Object> getById(@PathVariable Long id) {
-        Optional<PersonEntity> person = personService.findById(id);
+        Optional<PersonEntity> person = _personService.findById(id);
 
         if (person.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -42,7 +42,7 @@ public class PersonController {
 
     @GetMapping("/{name}")
     public ResponseEntity<Object> getByName(@PathVariable String name) {
-        Optional<PersonEntity> person = personService.findByName(name);
+        Optional<PersonEntity> person = _personService.findByName(name);
 
         if (person.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -69,14 +69,14 @@ public class PersonController {
                 .password(person.getPassword())
                 .build();
 
-        personService.save(personEntity);
+        _personService.save(personEntity);
 
         return ResponseEntity.ok(personEntity);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
-        Optional<PersonEntity> person = personService.findById(id);
+        Optional<PersonEntity> person = _personService.findById(id);
 
         if (person.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -85,8 +85,8 @@ public class PersonController {
                     ));
         }
 
-        personService.delete(id);
+        _personService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .body(null);
+                .build();
     }
 }
