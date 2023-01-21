@@ -3,7 +3,6 @@ package com.kaua.first.services;
 import com.kaua.first.entities.PersonEntity;
 import com.kaua.first.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
