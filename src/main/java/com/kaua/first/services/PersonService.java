@@ -26,6 +26,10 @@ public class PersonService {
         return personRepository.findByName(name);
     }
 
+    public Optional<PersonEntity> findByEmail(String email) {
+        return personRepository.findByEmail(email);
+    }
+
     public PersonEntity save(PersonEntity personEntity) {
         return personRepository.save(personEntity);
     }

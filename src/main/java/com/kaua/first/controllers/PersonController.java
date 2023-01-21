@@ -2,6 +2,7 @@ package com.kaua.first.controllers;
 
 import com.kaua.first.AppError;
 import com.kaua.first.entities.PersonEntity;
+import com.kaua.first.exceptions.EmailAlreadyExistsException;
 import com.kaua.first.exceptions.PasswordInvalidException;
 import com.kaua.first.exceptions.UserNotFoundException;
 import com.kaua.first.models.Person;
@@ -60,6 +61,15 @@ public class PersonController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new AppError(
                             new PasswordInvalidException().getMessage()
+                    ));
+        }
+
+        Optional<PersonEntity> emailExists = _personService.findByEmail(person.getEmail());
+
+        if (emailExists.isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new AppError(
+                            new EmailAlreadyExistsException().getMessage()
                     ));
         }
 
