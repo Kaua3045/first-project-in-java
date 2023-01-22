@@ -47,23 +47,17 @@ public class CourseController {
     public ResponseEntity<Object> buyCourse(
             @PathVariable Long courseId,
             @PathVariable Long personId
-    ) {
+    ) throws CourseNotFoundException, UserNotFoundException {
         Optional<CourseEntity> courseEntity = _courseService.findById(courseId);
 
         if (courseEntity.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AppError(
-                            new CourseNotFoundException().getMessage()
-                    ));
+            throw new CourseNotFoundException();
         }
 
         Optional<PersonEntity> personEntity = _personService.findById(personId);
 
         if (personEntity.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AppError(
-                            new UserNotFoundException().getMessage()
-                    ));
+            throw new UserNotFoundException();
         }
 
         personEntity.get().addCourse(courseEntity.get());
