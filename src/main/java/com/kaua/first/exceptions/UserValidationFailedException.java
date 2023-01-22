@@ -7,13 +7,14 @@ import java.util.List;
 
 public class UserValidationFailedException extends Exception {
 
-    public static List<ErrorCustom> errors = new ArrayList<>();
+    public static List<ErrorCustom> errors;
 
     public UserValidationFailedException() {
         super("User validation failed");
     }
 
     public static UserValidationFailedException with(List<ErrorCustom> error) {
+        errors = new ArrayList<>();
         if (!error.isEmpty()) {
             errors.addAll(error);
         }
