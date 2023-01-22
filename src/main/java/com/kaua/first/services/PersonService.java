@@ -3,7 +3,6 @@ package com.kaua.first.services;
 import com.kaua.first.entities.PersonEntity;
 import com.kaua.first.repositories.PersonRepository;
 import com.kaua.first.services.interfaces.PersonServiceGateway;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
