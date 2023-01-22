@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service
 public class CourseService implements CourseServiceGateway {
 
-    @Autowired
     private CourseRepository _courseRepository;
+
+    public CourseService(CourseRepository _courseRepository) {
+        this._courseRepository = _courseRepository;
+    }
 
     @Override
     public CourseEntity save(CourseEntity course) {
