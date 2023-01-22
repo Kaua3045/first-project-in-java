@@ -10,6 +10,7 @@ import com.kaua.first.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -76,7 +77,7 @@ public class PersonController {
         PersonEntity personEntity = PersonEntity.builder()
                 .name(person.getName())
                 .email(person.getEmail())
-                .password(person.getPassword())
+                .password(new BCryptPasswordEncoder().encode(person.getPassword()))
                 .build();
 
         _personService.save(personEntity);
