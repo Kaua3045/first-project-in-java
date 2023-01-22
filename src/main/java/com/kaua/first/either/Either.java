@@ -4,7 +4,7 @@ public abstract class Either<L, R>{
 
     private static class Base<L, R> extends Either<L, R> {
         @Override
-        public boolean leftValue() {
+        public boolean isLeft() {
             throw new UnsupportedOperationException();
         }
 
@@ -24,7 +24,7 @@ public abstract class Either<L, R>{
         }
     }
 
-    public abstract boolean leftValue();
+    public abstract boolean isLeft();
 
     public abstract L getLeftValue();
 
@@ -49,7 +49,7 @@ public abstract class Either<L, R>{
         }
 
         @Override
-        public boolean leftValue() {
+        public boolean isLeft() {
             return true;
         }
 
@@ -79,7 +79,7 @@ public abstract class Either<L, R>{
         }
 
         @Override
-        public boolean leftValue() {
+        public boolean isLeft() {
             return false;
         }
 

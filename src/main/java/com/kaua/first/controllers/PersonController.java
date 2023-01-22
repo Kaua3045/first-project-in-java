@@ -59,7 +59,7 @@ public class PersonController {
 
         Either<UserValidationFailedException, PersonEntity> result = _personService.save1(person);
 
-        if (result.leftValue()) {
+        if (result.isLeft()) {
             throw result.getLeftValue();
         }
 
