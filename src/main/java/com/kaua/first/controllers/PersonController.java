@@ -1,6 +1,5 @@
 package com.kaua.first.controllers;
 
-import com.kaua.first.AppError;
 import com.kaua.first.entities.PersonEntity;
 import com.kaua.first.exceptions.EmailAlreadyExistsException;
 import com.kaua.first.exceptions.PasswordInvalidException;
@@ -29,49 +28,37 @@ public class PersonController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Object> getById(@PathVariable Long id) {
+    public ResponseEntity<Object> getById(@PathVariable Long id) throws UserNotFoundException {
         Optional<PersonEntity> person = _personService.findById(id);
 
         if (person.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AppError(
-                            new UserNotFoundException().getMessage()
-                    ));
+            throw new UserNotFoundException();
         }
 
         return ResponseEntity.ok(person);
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<Object> getByName(@PathVariable String name) {
+    public ResponseEntity<Object> getByName(@PathVariable String name) throws UserNotFoundException {
         Optional<PersonEntity> person = _personService.findByName(name);
 
         if (person.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AppError(
-                            new UserNotFoundException().getMessage()
-                    ));
+            throw new UserNotFoundException();
         }
 
         return ResponseEntity.ok(person);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Object> create(@RequestBody Person person) {
+    public ResponseEntity<Object> create(@RequestBody Person person) throws PasswordInvalidException, EmailAlreadyExistsException {
         if (!person.passwordIsValid()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AppError(
-                            new PasswordInvalidException().getMessage()
-                    ));
+            throw new PasswordInvalidException();
         }
 
         Optional<PersonEntity> emailExists = _personService.findByEmail(person.getEmail());
 
         if (emailExists.isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AppError(
-                            new EmailAlreadyExistsException().getMessage()
-                    ));
+            throw new EmailAlreadyExistsException();
         }
 
         PersonEntity personEntity = PersonEntity.builder()
@@ -86,14 +73,11 @@ public class PersonController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
+    public ResponseEntity<Object> delete(@PathVariable Long id) throws UserNotFoundException {
         Optional<PersonEntity> person = _personService.findById(id);
 
         if (person.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AppError(
-                            new UserNotFoundException().getMessage()
-                    ));
+            throw new UserNotFoundException();
         }
 
         _personService.delete(id);
