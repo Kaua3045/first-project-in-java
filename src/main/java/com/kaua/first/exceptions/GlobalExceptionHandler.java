@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserValidationFailedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<AppError> handleDomainCreationException(UserValidationFailedException exception) {
+    public ResponseEntity<AppError> handleUserValidationFailedException(UserValidationFailedException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new AppError(exception.getMessage(), UserValidationFailedException.errors));
