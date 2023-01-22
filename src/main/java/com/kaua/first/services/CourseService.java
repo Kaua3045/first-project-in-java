@@ -3,8 +3,6 @@ package com.kaua.first.services;
 import com.kaua.first.entities.CourseEntity;
 import com.kaua.first.repositories.CourseRepository;
 import com.kaua.first.services.interfaces.CourseServiceGateway;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
