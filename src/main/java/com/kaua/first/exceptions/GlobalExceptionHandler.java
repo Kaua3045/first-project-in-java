@@ -41,4 +41,12 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new AppError(exception.getMessage()));
     }
+
+    @ExceptionHandler(UserValidationFailedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<AppError> handleDomainCreationException(UserValidationFailedException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new AppError(exception.getMessage(), UserValidationFailedException.errors));
+    }
 }

@@ -1,15 +1,15 @@
 package com.kaua.first.controllers;
 
+import com.kaua.first.either.Either;
 import com.kaua.first.entities.PersonEntity;
 import com.kaua.first.exceptions.EmailAlreadyExistsException;
-import com.kaua.first.exceptions.PasswordInvalidException;
 import com.kaua.first.exceptions.UserNotFoundException;
+import com.kaua.first.exceptions.UserValidationFailedException;
 import com.kaua.first.models.Person;
 import com.kaua.first.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,26 +50,20 @@ public class PersonController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Object> create(@RequestBody Person person) throws PasswordInvalidException, EmailAlreadyExistsException {
-        if (!person.passwordIsValid()) {
-            throw new PasswordInvalidException();
-        }
-
+    public ResponseEntity<Object> create(@RequestBody Person person) throws Throwable {
         Optional<PersonEntity> emailExists = _personService.findByEmail(person.getEmail());
 
         if (emailExists.isPresent()) {
             throw new EmailAlreadyExistsException();
         }
 
-        PersonEntity personEntity = PersonEntity.builder()
-                .name(person.getName())
-                .email(person.getEmail())
-                .password(new BCryptPasswordEncoder().encode(person.getPassword()))
-                .build();
+        Either<UserValidationFailedException, PersonEntity> result = _personService.save1(person);
 
-        _personService.save(personEntity);
+        if (result.leftValue()) {
+            throw result.getLeftValue();
+        }
 
-        return ResponseEntity.ok(personEntity);
+        return ResponseEntity.ok(result.getRightValue());
     }
 
     @DeleteMapping("/delete/{id}")
