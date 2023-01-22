@@ -14,7 +14,7 @@ public abstract class Either<L, R>{
         }
 
         @Override
-        public Right rightValue() {
+        public boolean isRight() {
             throw new UnsupportedOperationException();
         }
 
@@ -30,7 +30,7 @@ public abstract class Either<L, R>{
 
     public abstract R getRightValue();
 
-    public abstract Right rightValue();
+    public abstract boolean isRight();
 
     public static <L, R> Either<L, R> left(L value) {
         return new Base<L, R>().new Left(value);
@@ -59,8 +59,8 @@ public abstract class Either<L, R>{
         }
 
         @Override
-        public Right rightValue() {
-            return null;
+        public boolean isRight() {
+            return false;
         }
 
         @Override
@@ -93,8 +93,8 @@ public abstract class Either<L, R>{
         }
 
         @Override
-        public Right rightValue() {
-            return this;
+        public boolean isRight() {
+            return true;
         }
     }
 }
