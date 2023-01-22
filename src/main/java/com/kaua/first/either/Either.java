@@ -1,15 +1,15 @@
 package com.kaua.first.either;
 
-public abstract class Either<A, B>{
+public abstract class Either<L, R>{
 
-    private static class Base<A, B> extends Either<A, B> {
+    private static class Base<L, R> extends Either<L, R> {
         @Override
         public boolean leftValue() {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public A getLeftValue() {
+        public L getLeftValue() {
             throw new UnsupportedOperationException();
         }
 
@@ -19,32 +19,32 @@ public abstract class Either<A, B>{
         }
 
         @Override
-        public B getRightValue() {
+        public R getRightValue() {
             throw new UnsupportedOperationException();
         }
     }
 
     public abstract boolean leftValue();
 
-    public abstract A getLeftValue();
+    public abstract L getLeftValue();
 
-    public abstract B getRightValue();
+    public abstract R getRightValue();
 
     public abstract Right rightValue();
 
-    public static <A, B> Either<A, B> left(A value) {
-        return new Base<A, B>().new Left(value);
+    public static <L, R> Either<L, R> left(L value) {
+        return new Base<L, R>().new Left(value);
     }
 
-    public static <A, B> Either<A, B> right(B value) {
-        return new Base<A, B>().new Right(value);
+    public static <L, R> Either<L, R> right(R value) {
+        return new Base<L, R>().new Right(value);
     }
 
-    public class Left extends Either<A, B> {
+    public class Left extends Either<L, R> {
 
-        private A value;
+        private L value;
 
-        public Left(A value) {
+        public Left(L value) {
             this.value = value;
         }
 
@@ -54,7 +54,7 @@ public abstract class Either<A, B>{
         }
 
         @Override
-        public A getLeftValue() {
+        public L getLeftValue() {
             return this.value;
         }
 
@@ -64,17 +64,17 @@ public abstract class Either<A, B>{
         }
 
         @Override
-        public B getRightValue() {
+        public R getRightValue() {
             return null;
         }
 
     }
 
-    public class Right extends Either<A, B> {
+    public class Right extends Either<L, R> {
 
-        private B value;
+        private R value;
 
-        public Right(B value) {
+        public Right(R value) {
             this.value = value;
         }
 
@@ -83,12 +83,12 @@ public abstract class Either<A, B>{
             return false;
         }
 
-        public A getLeftValue() {
+        public L getLeftValue() {
             return null;
         }
 
         @Override
-        public B getRightValue() {
+        public R getRightValue() {
             return this.value;
         }
 
