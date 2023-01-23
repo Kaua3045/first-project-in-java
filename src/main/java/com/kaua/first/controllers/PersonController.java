@@ -60,10 +60,10 @@ public class PersonController {
         Either<UserValidationFailedException, PersonEntity> result = _personService.save1(person);
 
         if (result.isLeft()) {
-            throw result.getLeftValue();
+            throw result.getLeft();
         }
 
-        return ResponseEntity.ok(result.getRightValue());
+        return ResponseEntity.ok(result.getRight());
     }
 
     @DeleteMapping("/delete/{id}")

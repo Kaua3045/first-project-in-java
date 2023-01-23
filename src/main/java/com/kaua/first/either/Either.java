@@ -1,15 +1,13 @@
 package com.kaua.first.either;
 
-public abstract class Either<L, R>{
+import java.util.NoSuchElementException;
 
-    private static class Base<L, R> extends Either<L, R> {
+public abstract class Either<L, R> {
+
+    private static class BaseMethods<L, R> extends Either<L, R> {
+
         @Override
         public boolean isLeft() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public L getLeftValue() {
             throw new UnsupportedOperationException();
         }
 
@@ -19,28 +17,23 @@ public abstract class Either<L, R>{
         }
 
         @Override
-        public R getRightValue() {
+        public L getLeft() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public R getRight() {
             throw new UnsupportedOperationException();
         }
     }
 
     public abstract boolean isLeft();
-
-    public abstract L getLeftValue();
-
-    public abstract R getRightValue();
-
     public abstract boolean isRight();
 
-    public static <L, R> Either<L, R> left(L value) {
-        return new Base<L, R>().new Left(value);
-    }
+    public abstract L getLeft();
+    public abstract R getRight();
 
-    public static <L, R> Either<L, R> right(R value) {
-        return new Base<L, R>().new Right(value);
-    }
-
-    public class Left extends Either<L, R> {
+    class Left extends Either<L, R> {
 
         private L value;
 
@@ -54,23 +47,22 @@ public abstract class Either<L, R>{
         }
 
         @Override
-        public L getLeftValue() {
-            return this.value;
-        }
-
-        @Override
         public boolean isRight() {
             return false;
         }
 
         @Override
-        public R getRightValue() {
-            return null;
+        public L getLeft() {
+            return this.value;
         }
 
+        @Override
+        public R getRight() {
+            throw new NoSuchElementException("There is no right in Left");
+        }
     }
 
-    public class Right extends Either<L, R> {
+    class Right extends Either<L, R> {
 
         private R value;
 
@@ -83,18 +75,27 @@ public abstract class Either<L, R>{
             return false;
         }
 
-        public L getLeftValue() {
-            return null;
-        }
-
-        @Override
-        public R getRightValue() {
-            return this.value;
-        }
-
         @Override
         public boolean isRight() {
             return true;
         }
+
+        @Override
+        public L getLeft() {
+            throw new NoSuchElementException("There is no left in Right");
+        }
+
+        @Override
+        public R getRight() {
+            return this.value;
+        }
+    }
+
+    public static <L, R> Either<L, R> right(R value) {
+        return new BaseMethods<L, R>().new Right(value);
+    }
+
+    public static <L, R> Either<L, R> left(L value) {
+        return new BaseMethods<L, R>().new Left(value);
     }
 }
