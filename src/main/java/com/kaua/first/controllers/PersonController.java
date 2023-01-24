@@ -5,8 +5,11 @@ import com.kaua.first.entities.PersonEntity;
 import com.kaua.first.exceptions.EmailAlreadyExistsException;
 import com.kaua.first.exceptions.UserNotFoundException;
 import com.kaua.first.exceptions.UserValidationFailedException;
+import com.kaua.first.models.AuthenticationInputRequest;
+import com.kaua.first.models.AuthenticationOutput;
 import com.kaua.first.models.Person;
 import com.kaua.first.services.PersonService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,7 @@ public class PersonController {
     }
 
     @GetMapping("/id/{id}")
+    @Transactional
     public ResponseEntity<Object> getById(@PathVariable Long id) throws UserNotFoundException {
         Optional<PersonEntity> person = _personService.findById(id);
 
@@ -64,6 +68,11 @@ public class PersonController {
         }
 
         return ResponseEntity.ok(result.getRight());
+    }
+
+    @PostMapping("/auth")
+    public ResponseEntity<AuthenticationOutput> login(@RequestBody AuthenticationInputRequest request) throws UserNotFoundException {
+        return ResponseEntity.ok(_personService.authenticate(request));
     }
 
     @DeleteMapping("/delete/{id}")

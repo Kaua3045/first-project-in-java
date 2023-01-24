@@ -8,6 +8,7 @@ import com.kaua.first.exceptions.UserNotFoundException;
 import com.kaua.first.models.Course;
 import com.kaua.first.services.CourseService;
 import com.kaua.first.services.PersonService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,7 @@ public class CourseController {
     }
 
     @PostMapping("/buy/{courseId}/{personId}")
+    @Transactional
     public ResponseEntity<Object> buyCourse(
             @PathVariable Long courseId,
             @PathVariable Long personId
