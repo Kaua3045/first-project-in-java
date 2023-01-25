@@ -5,8 +5,8 @@ import com.kaua.first.either.ErrorCustom;
 import com.kaua.first.entities.PersonEntity;
 import com.kaua.first.exceptions.UserNotFoundException;
 import com.kaua.first.exceptions.UserValidationFailedException;
-import com.kaua.first.models.AuthenticationInputRequest;
-import com.kaua.first.models.AuthenticationOutput;
+import com.kaua.first.models.dtos.AuthenticationInputRequest;
+import com.kaua.first.models.dtos.AuthenticationOutput;
 import com.kaua.first.models.Person;
 import com.kaua.first.repositories.PersonRepository;
 import com.kaua.first.security.JwtService;
@@ -43,8 +43,14 @@ public class PersonService implements PersonServiceGateway {
     }
 
     @Override
-    public Optional<PersonEntity> findByName(String name) {
-        return personRepository.findByName(name);
+    public Either<UserNotFoundException, PersonEntity> findByName(String name) {
+        Optional<PersonEntity> person = personRepository.findByName(name);
+
+        if (person.isEmpty()) {
+            return Either.left(new UserNotFoundException());
+        }
+
+        return Either.right(person.get());
     }
 
     @Override
@@ -59,11 +65,7 @@ public class PersonService implements PersonServiceGateway {
     }
 
     @Override
-    public PersonEntity save(PersonEntity personEntity) {
-        return null;
-    }
-
-    public Either<UserValidationFailedException, PersonEntity> save1(Person person) {
+    public Either<UserValidationFailedException, PersonEntity> save(Person person) {
         List<ErrorCustom> errors = person.validate();
 
         if (!errors.isEmpty()) {

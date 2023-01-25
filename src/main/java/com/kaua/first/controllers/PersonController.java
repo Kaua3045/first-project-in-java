@@ -5,8 +5,8 @@ import com.kaua.first.entities.PersonEntity;
 import com.kaua.first.exceptions.EmailAlreadyExistsException;
 import com.kaua.first.exceptions.UserNotFoundException;
 import com.kaua.first.exceptions.UserValidationFailedException;
-import com.kaua.first.models.AuthenticationInputRequest;
-import com.kaua.first.models.AuthenticationOutput;
+import com.kaua.first.models.dtos.AuthenticationInputRequest;
+import com.kaua.first.models.dtos.AuthenticationOutput;
 import com.kaua.first.models.Person;
 import com.kaua.first.services.PersonService;
 import jakarta.transaction.Transactional;
@@ -32,36 +32,36 @@ public class PersonController {
 
     @GetMapping("/id/{id}")
     @Transactional
-    public ResponseEntity<Object> getById(@PathVariable Long id) throws UserNotFoundException {
+    public ResponseEntity<PersonEntity> getById(@PathVariable Long id) throws UserNotFoundException {
         Optional<PersonEntity> person = _personService.findById(id);
 
         if (person.isEmpty()) {
             throw new UserNotFoundException();
         }
 
-        return ResponseEntity.ok(person);
+        return ResponseEntity.ok(person.get());
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<Object> getByName(@PathVariable String name) throws UserNotFoundException {
-        Optional<PersonEntity> person = _personService.findByName(name);
+    public ResponseEntity<PersonEntity> getByName(@PathVariable String name) throws UserNotFoundException {
+        Either<UserNotFoundException, PersonEntity> person = _personService.findByName(name);
 
-        if (person.isEmpty()) {
-            throw new UserNotFoundException();
+        if (person.isLeft()) {
+            throw person.getLeft();
         }
 
-        return ResponseEntity.ok(person);
+        return ResponseEntity.ok(person.getRight());
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Object> create(@RequestBody Person person) throws Throwable {
+    public ResponseEntity<PersonEntity> create(@RequestBody Person person) throws Throwable {
         Optional<PersonEntity> emailExists = _personService.findByEmail(person.getEmail());
 
         if (emailExists.isPresent()) {
             throw new EmailAlreadyExistsException();
         }
 
-        Either<UserValidationFailedException, PersonEntity> result = _personService.save1(person);
+        Either<UserValidationFailedException, PersonEntity> result = _personService.save(person);
 
         if (result.isLeft()) {
             throw result.getLeft();

@@ -3,8 +3,6 @@ package com.kaua.first.configuration;
 import com.kaua.first.entities.PersonEntity;
 import com.kaua.first.repositories.PersonRepository;
 import com.kaua.first.security.JwtAuthenticationFilter;
-import com.kaua.first.security.JwtService;
-import com.kaua.first.services.PersonService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,16 +15,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Configuration
@@ -49,7 +44,7 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/person/create", "/api/v1/person/auth")
+                .requestMatchers("/api/v1/person/create", "/api/v1/person/auth", "/error")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -67,7 +62,7 @@ public class SecurityConfiguration {
     public UserDetailsService userDetailsService() {
         return username -> {
             PersonEntity person = personRepository.findByEmail(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found erro xablau"));
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
             grantedAuthorities.add(new SimpleGrantedAuthority("user"));

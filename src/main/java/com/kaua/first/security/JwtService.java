@@ -1,7 +1,6 @@
 package com.kaua.first.security;
 
 import com.kaua.first.entities.PersonEntity;
-import com.kaua.first.models.Person;
 import com.kaua.first.security.interfaces.JwtServiceGateway;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -9,7 +8,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Key;
 import java.util.Date;
@@ -18,6 +16,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class JwtService implements JwtServiceGateway {
+
+    @Value("${SECRET_KEY}")
+    private String SECRET_KEY_JWT;
 
     @Override
     public String extractUsername(String token) {
@@ -67,7 +68,7 @@ public class JwtService implements JwtServiceGateway {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode("58703273357638792F423F4528472B4B6250655368566D597133743677397A24");
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY_JWT);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

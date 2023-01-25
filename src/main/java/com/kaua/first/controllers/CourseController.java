@@ -1,6 +1,5 @@
 package com.kaua.first.controllers;
 
-import com.kaua.first.AppError;
 import com.kaua.first.entities.CourseEntity;
 import com.kaua.first.entities.PersonEntity;
 import com.kaua.first.exceptions.CourseNotFoundException;
@@ -10,7 +9,6 @@ import com.kaua.first.services.CourseService;
 import com.kaua.first.services.PersonService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,15 +54,14 @@ public class CourseController {
             throw new CourseNotFoundException();
         }
 
-        Optional<PersonEntity> personEntity = _personService.findById(personId);
+        Optional<PersonEntity> person = _personService.findById(personId);
 
-        if (personEntity.isEmpty()) {
+        if (person.isEmpty()) {
             throw new UserNotFoundException();
         }
 
-        personEntity.get().addCourse(courseEntity.get());
-        PersonEntity result = _personService.save(personEntity.get());
+        person.get().addCourse(courseEntity.get());
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(person);
     }
 }

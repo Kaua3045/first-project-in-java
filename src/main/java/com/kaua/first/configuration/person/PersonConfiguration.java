@@ -1,7 +1,6 @@
 package com.kaua.first.configuration.person;
 
 import com.kaua.first.repositories.PersonRepository;
-import com.kaua.first.security.JwtAuthenticationFilter;
 import com.kaua.first.security.JwtService;
 import com.kaua.first.services.PersonService;
 import org.springframework.context.annotation.Bean;
@@ -25,15 +24,5 @@ public class PersonConfiguration {
                 jwtService,
                 passwordEncoder
         );
-    }
-
-    @Bean
-    public JwtService jwtServiceBean() {
-        return new JwtService();
-    }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(PersonRepository personRepository) {
-        return new JwtAuthenticationFilter(jwtServiceBean(), personRepository);
     }
 }
