@@ -43,14 +43,6 @@ public class GlobalExceptionHandler {
                 .body(new AppError(exception.getMessage()));
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<AppError> handleUsernameNotFoundExceptionFilter(UsernameNotFoundException exception) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new AppError(exception.getMessage()));
-    }
-
     @ExceptionHandler(UserValidationFailedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<AppError> handleUserValidationFailedException(UserValidationFailedException exception) {
