@@ -1,4 +1,4 @@
-## SIMPLE CRUD for create person
+## SIMPLE CRUD for creating a person
 
 - Project for studying Java, Spring Boot and Spring Data Jpa
 - Create a person, entering name, email and password
