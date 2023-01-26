@@ -9,6 +9,7 @@ import java.util.List;
 public class AppError {
 
     private String message;
+
     private List<ErrorCustom> validations;
 
     public AppError(String message) {
