@@ -1,4 +1,7 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
+
   jackson:
     default-property-inclusion: non_null
   datasource:
@@ -17,4 +20,5 @@ spring:
       enabled: true
       path: /h2
 
-SECRET_KEY: 58703273357638792F423F4528472B4B6250655368566D597133743677397A24
+  jwt:
+    secret: ${SECRET_KEY_JWT}

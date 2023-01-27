@@ -7,7 +7,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.security.Key;
 import java.util.Date;
@@ -17,8 +16,11 @@ import java.util.function.Function;
 
 public class JwtService implements JwtServiceGateway {
 
-    @Value("${SECRET_KEY}")
     private String SECRET_KEY_JWT;
+
+    public JwtService(String SECRET_KEY_JWT) {
+        this.SECRET_KEY_JWT = SECRET_KEY_JWT;
+    }
 
     @Override
     public String extractUsername(String token) {
@@ -68,6 +70,7 @@ public class JwtService implements JwtServiceGateway {
     }
 
     private Key getSignInKey() {
+        System.out.println(SECRET_KEY_JWT);
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY_JWT);
         return Keys.hmacShaKeyFor(keyBytes);
     }
