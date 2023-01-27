@@ -1,15 +1,12 @@
 package com.kaua.first.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @Table(
         name = "persons",
@@ -40,9 +37,22 @@ public class PersonEntity {
             inverseJoinColumns = @JoinColumn(name = "person_id"))
     private List<CourseEntity> courses;
 
+    public PersonEntity(Long id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.courses = new ArrayList<>();
+    }
+
     public void addCourse(CourseEntity course) {
         this.courses.add(course);
         course.getPersons().add(this);
+    }
+
+    public void addAllCourses(List<CourseEntity> courses) {
+        this.courses.addAll(courses);
+        courses.forEach(c -> c.getPersons().add(this));
     }
 
     public Long getId() {

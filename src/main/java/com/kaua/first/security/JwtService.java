@@ -70,7 +70,6 @@ public class JwtService implements JwtServiceGateway {
     }
 
     private Key getSignInKey() {
-        System.out.println(SECRET_KEY_JWT);
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY_JWT);
         return Keys.hmacShaKeyFor(keyBytes);
     }

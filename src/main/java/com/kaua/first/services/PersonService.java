@@ -5,6 +5,7 @@ import com.kaua.first.either.ErrorCustom;
 import com.kaua.first.entities.PersonEntity;
 import com.kaua.first.exceptions.UserNotFoundException;
 import com.kaua.first.exceptions.UserValidationFailedException;
+import com.kaua.first.models.Course;
 import com.kaua.first.models.dtos.AuthenticationInputRequest;
 import com.kaua.first.models.dtos.AuthenticationOutput;
 import com.kaua.first.models.Person;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class PersonService implements PersonServiceGateway {
 
@@ -38,8 +40,29 @@ public class PersonService implements PersonServiceGateway {
     }
 
     @Override
-    public Optional<PersonEntity> findById(Long id) {
-        return personRepository.findById(id);
+    public Optional<Person> findById(Long id) throws UserNotFoundException {
+        Optional<PersonEntity> personEntity = personRepository.findById(id);
+
+        if (personEntity.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
+        List<Course> courses = personEntity.get().getCourses().stream().map(c -> new Course(
+                c.getId(),
+                c.getName(),
+                c.getDescription()
+        )).collect(Collectors.toList());
+
+        Person person = new Person(
+                personEntity.get().getId(),
+                personEntity.get().getName(),
+                personEntity.get().getEmail(),
+                personEntity.get().getPassword()
+        );
+
+        person.addAllCourse(courses);
+
+        return Optional.of(person);
     }
 
     @Override
@@ -72,12 +95,10 @@ public class PersonService implements PersonServiceGateway {
             return Either.left(UserValidationFailedException.with(errors));
         }
 
-        PersonEntity personEntity = PersonEntity
-                .builder()
-                .name(person.getName())
-                .email(person.getEmail())
-                .password(passwordEncoder.encode(person.getPassword()))
-                .build();
+        PersonEntity personEntity = new PersonEntity();
+        personEntity.setName(person.getName());
+        personEntity.setEmail(person.getEmail());
+        personEntity.setPassword(passwordEncoder.encode(person.getPassword()));
 
         personRepository.save(personEntity);
 
@@ -99,6 +120,10 @@ public class PersonService implements PersonServiceGateway {
         String jwtToken = jwtService.generateToken(person.get());
 
         return new AuthenticationOutput(jwtToken);
+    }
+
+    public void update(PersonEntity person) {
+        personRepository.save(person);
     }
 
     @Override

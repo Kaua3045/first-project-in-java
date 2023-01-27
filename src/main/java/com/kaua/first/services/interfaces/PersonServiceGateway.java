@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface PersonServiceGateway {
 
     List<PersonEntity> findAll();
-    Optional<PersonEntity> findById(Long id);
+    Optional<Person> findById(Long id) throws UserNotFoundException;
     Either<UserNotFoundException, PersonEntity> findByName(String name);
     Optional<PersonEntity> findByEmail(String email);
     Either<UserValidationFailedException, PersonEntity> save(Person person);

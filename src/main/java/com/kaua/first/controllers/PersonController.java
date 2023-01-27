@@ -32,8 +32,8 @@ public class PersonController {
 
     @GetMapping("/id/{id}")
     @Transactional
-    public ResponseEntity<PersonEntity> getById(@PathVariable Long id) throws UserNotFoundException {
-        Optional<PersonEntity> person = _personService.findById(id);
+    public ResponseEntity<Person> getById(@PathVariable Long id) throws UserNotFoundException {
+        Optional<Person> person = _personService.findById(id);
 
         if (person.isEmpty()) {
             throw new UserNotFoundException();
@@ -77,7 +77,7 @@ public class PersonController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) throws UserNotFoundException {
-        Optional<PersonEntity> person = _personService.findById(id);
+        Optional<Person> person = _personService.findById(id);
 
         if (person.isEmpty()) {
             throw new UserNotFoundException();

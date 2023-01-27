@@ -1,19 +1,37 @@
 package com.kaua.first.models;
 
 import com.kaua.first.either.ErrorCustom;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 public class Person {
 
+    private Long id;
     private String name;
     private String email;
     private String password;
+    private List<Course> courses;
+
+    public Person(Long id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.courses = new ArrayList<>();
+    }
+
+    public void addAllCourse(List<Course> course) {
+        this.courses.addAll(course);
+        course.forEach(x -> x.getPersons().add(this));
+    }
+
+    public void addCourse(Course course) {
+        this.courses.add(course);
+        course.getPersons().add(this);
+    }
 
     public List<ErrorCustom> validate() {
         List<ErrorCustom> errors = new ArrayList<>();

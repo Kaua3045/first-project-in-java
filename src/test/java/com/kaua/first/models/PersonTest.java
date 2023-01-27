@@ -12,6 +12,7 @@ class PersonTest {
     @DisplayName("Should return false if password contain less than 8 characters")
     void shouldReturnFalseIfPasswordInvalid() {
         Person person = new Person(
+                1L,
                 "john",
                 "john.mail@mail.com",
                 "john"
@@ -24,6 +25,7 @@ class PersonTest {
     @DisplayName("Should return true if password contains equal or more than 8 characters")
     void shouldReturnTrueIfPasswordValid() {
         Person person = new Person(
+                1L,
                 "john",
                 "john.mail@mail.com",
                 "johnpass"

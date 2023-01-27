@@ -5,6 +5,7 @@ import com.kaua.first.entities.PersonEntity;
 import com.kaua.first.exceptions.CourseNotFoundException;
 import com.kaua.first.exceptions.UserNotFoundException;
 import com.kaua.first.models.Course;
+import com.kaua.first.models.Person;
 import com.kaua.first.services.CourseService;
 import com.kaua.first.services.PersonService;
 import jakarta.transaction.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/course")
@@ -32,10 +34,9 @@ public class CourseController {
 
     @PostMapping
     public ResponseEntity<CourseEntity> createCourse(@RequestBody Course course) {
-        CourseEntity courseEntity = CourseEntity.builder()
-                .name(course.getName())
-                .description(course.getDescription())
-                .build();
+        CourseEntity courseEntity = new CourseEntity();
+        courseEntity.setName(course.getName());
+        courseEntity.setDescription(course.getDescription());
 
         _courseService.save(courseEntity);
 
@@ -54,14 +55,36 @@ public class CourseController {
             throw new CourseNotFoundException();
         }
 
-        Optional<PersonEntity> person = _personService.findById(personId);
+        Optional<Person> person = _personService.findById(personId);
 
         if (person.isEmpty()) {
             throw new UserNotFoundException();
         }
 
-        person.get().addCourse(courseEntity.get());
+        Course c = new Course(
+                courseEntity.get().getId(),
+                courseEntity.get().getName(),
+                courseEntity.get().getDescription()
+        );
 
-        return ResponseEntity.ok(person);
+        person.get().addCourse(c);
+
+        List<CourseEntity> courseEntities = person.get().getCourses().stream().map(c2 -> new CourseEntity(
+                c2.getId(),
+                c2.getName(),
+                c2.getDescription())
+        ).collect(Collectors.toList());
+
+        PersonEntity personEntity = new PersonEntity(
+                person.get().getId(),
+                person.get().getName(),
+                person.get().getEmail(),
+                person.get().getPassword()
+        );
+
+        personEntity.addAllCourses(courseEntities);
+        _personService.update(personEntity);
+
+        return ResponseEntity.noContent().build();
     }
 }

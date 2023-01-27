@@ -7,12 +7,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "courses")
 public class CourseEntity {
@@ -30,4 +29,11 @@ public class CourseEntity {
     @ManyToMany(mappedBy = "courses")
     @JsonIgnore
     private List<PersonEntity> persons;
+
+    public CourseEntity(Long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.persons = new ArrayList<>();
+    }
 }
